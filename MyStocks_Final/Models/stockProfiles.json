@@ -1,0 +1,292 @@
+[
+  {
+    "name": "Waters Corp",
+    "logo": "https://finnhub.io/api/logo?symbol=WAT",
+    "ticker": "WAT"
+  },
+  {
+    "name": "American Airlines Group Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=AAL",
+    "ticker": "AAL"
+  },
+  {
+    "name": "Advance Auto Parts Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=AAP",
+    "ticker": "AAP"
+  },
+  {
+    "name": "Abbvie Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=ABBV",
+    "ticker": "ABBV"
+  },
+  {
+    "name": "Abbott Laboratories",
+    "logo": "https://finnhub.io/api/logo?symbol=ABT",
+    "ticker": "ABT"
+  },
+  {
+    "name": "Accenture PLC",
+    "logo": "https://finnhub.io/api/logo?symbol=ACN",
+    "ticker": "ACN"
+  },
+  {
+    "name": "Adobe Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=ADBE",
+    "ticker": "ADBE"
+  },
+  {
+    "name": "Ameren Corp",
+    "logo": "https://finnhub.io/api/logo?symbol=AEE",
+    "ticker": "AEE"
+  },
+  {
+    "name": "AES Corp",
+    "logo": "https://finnhub.io/api/logo?symbol=AES",
+    "ticker": "AES"
+  },
+  {
+    "name": "Aflac Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=AFL",
+    "ticker": "AFL"
+  },
+  {
+    "name": "Albemarle Corp",
+    "logo": "https://finnhub.io/api/logo?symbol=ALB",
+    "ticker": "ALB"
+  },
+  {
+    "name": "Alaska Air Group Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=ALK",
+    "ticker": "ALK"
+  },
+  {
+    "name": "Allstate Corp",
+    "logo": "https://finnhub.io/api/logo?symbol=ALL",
+    "ticker": "ALL"
+  },
+  {
+    "name": "Allegion PLC",
+    "logo": "https://finnhub.io/api/logo?symbol=ALLE",
+    "ticker": "ALLE"
+  },
+  {
+    "name": "Alexion Pharmaceuticals Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=ALXN",
+    "ticker": "ALXN"
+  },
+  {
+    "name": "Amcor PLC",
+    "logo": "https://finnhub.io/api/logo?symbol=AMCR",
+    "ticker": "AMCR"
+  },
+  {
+    "name": "Amazon.com Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=AMZN",
+    "ticker": "AMZN"
+  },
+  {
+    "name": "A. O. Smith Corp",
+    "logo": "https://finnhub.io/api/logo?symbol=AOS",
+    "ticker": "AOS"
+  },
+  {
+    "name": "Air Products and Chemicals Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=APD",
+    "ticker": "APD"
+  },
+  {
+    "name": "Activision Blizzard Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=ATVI",
+    "ticker": "ATVI"
+  },
+  {
+    "name": "Alphabet Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=GOOGL",
+    "ticker": "GOOGL"
+  },
+  {
+    "name": "Alliant Energy Corp",
+    "logo": "https://finnhub.io/api/logo?symbol=LNT",
+    "ticker": "LNT"
+  },
+  {
+    "name": "Altria Group Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=MO",
+    "ticker": "MO"
+  },
+  {
+    "name": "Apple Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=AAPL",
+    "ticker": "AAPL"
+  },
+  {
+    "name": "Analog Devices Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=ADI",
+    "ticker": "ADI"
+  },
+  {
+    "name": "Archer-Daniels-Midland Co",
+    "logo": "https://finnhub.io/api/logo?symbol=ADM",
+    "ticker": "ADM"
+  },
+  {
+    "name": "Automatic Data Processing Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=ADP",
+    "ticker": "ADP"
+  },
+  {
+    "name": "Autodesk Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=ADSK",
+    "ticker": "ADSK"
+  },
+  {
+    "name": "American International Group Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=AIG",
+    "ticker": "AIG"
+  },
+  {
+    "name": "Assurant Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=AIZ",
+    "ticker": "AIZ"
+  },
+  {
+    "name": "Arthur J Gallagher & Co",
+    "logo": "https://finnhub.io/api/logo?symbol=AJG",
+    "ticker": "AJG"
+  },
+  {
+    "name": "Applied Materials Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=AMAT",
+    "ticker": "AMAT"
+  },
+  {
+    "name": "AMETEK Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=AME",
+    "ticker": "AME"
+  },
+  {
+    "name": "Amgen Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=AMGN",
+    "ticker": "AMGN"
+  },
+  {
+    "name": "Ameriprise Financial Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=AMP",
+    "ticker": "AMP"
+  },
+  {
+    "name": "American Tower Corp",
+    "logo": "https://finnhub.io/api/logo?symbol=AMT",
+    "ticker": "AMT"
+  },
+  {
+    "name": "Arista Networks Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=ANET",
+    "ticker": "ANET"
+  },
+  {
+    "name": "ANSYS Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=ANSS",
+    "ticker": "ANSS"
+  },
+  {
+    "name": "Aon PLC",
+    "logo": "https://finnhub.io/api/logo?symbol=AON",
+    "ticker": "AON"
+  },
+  {
+    "name": "Apache Corp",
+    "logo": "https://finnhub.io/api/logo?symbol=APA",
+    "ticker": "APA"
+  },
+  {
+    "name": "Amphenol Corp",
+    "logo": "https://finnhub.io/api/logo?symbol=APH",
+    "ticker": "APH"
+  },
+  {
+    "name": "Aptiv PLC",
+    "logo": "https://finnhub.io/api/logo?symbol=APTV",
+    "ticker": "APTV"
+  },
+  {
+    "name": "Atmos Energy Corp",
+    "logo": "https://finnhub.io/api/logo?symbol=ATO",
+    "ticker": "ATO"
+  },
+  {
+    "name": "Avalonbay Communities Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=AVB",
+    "ticker": "AVB"
+  },
+  {
+    "name": "Avery Dennison Corp",
+    "logo": "https://finnhub.io/api/logo?symbol=AVY",
+    "ticker": "AVY"
+  },
+  {
+    "name": "American Express Co",
+    "logo": "https://finnhub.io/api/logo?symbol=AXP",
+    "ticker": "AXP"
+  },
+  {
+    "name": "Autozone Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=AZO",
+    "ticker": "AZO"
+  },
+  {
+    "name": "Baker Hughes Co",
+    "logo": "https://finnhub.io/api/logo?symbol=BKR",
+    "ticker": "BKR"
+  },
+  {
+    "name": "AT&T Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=T",
+    "ticker": "T"
+  },
+  {
+    "name": "Broadcom Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=AVGO",
+    "ticker": "AVGO"
+  },
+  {
+    "name": "Boeing Co",
+    "logo": "https://finnhub.io/api/logo?symbol=BA",
+    "ticker": "BA"
+  },
+  {
+    "name": "Bank of America Corp",
+    "logo": "https://finnhub.io/api/logo?symbol=BAC",
+    "ticker": "BAC"
+  },
+  {
+    "name": "Baxter International Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=BAX",
+    "ticker": "BAX"
+  },
+  {
+    "name": "Best Buy Co Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=BBY",
+    "ticker": "BBY"
+  },
+  {
+    "name": "Becton Dickinson and Co",
+    "logo": "https://finnhub.io/api/logo?symbol=BDX",
+    "ticker": "BDX"
+  },
+  {
+    "name": "Biogen Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=BIIB",
+    "ticker": "BIIB"
+  },
+  {
+    "name": "Bio Rad Laboratories Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=BIO",
+    "ticker": "BIO"
+  },
+  {
+    "name": "Booking Holdings Inc",
+    "logo": "https://finnhub.io/api/logo?symbol=BKNG",
+    "ticker": "BKNG"
+  }
+]
