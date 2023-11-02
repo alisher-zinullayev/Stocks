@@ -18,15 +18,16 @@ final class MainTableViewCell: UITableViewCell {
     
     weak var delegate: MainTableViewCellDelegate?
     
-    var model: StockMetaData?  {
-        didSet {
-            if model?.isFavorite == true {
-                starIcon.image = UIImage(named: "favorite")
-            } else {
-                starIcon.image = UIImage(named: "default")
-            }
-        }
-    }
+    var model: StockMetaData?
+// {
+//        didSet {
+//            if model?.isFavorite == true {
+//                starIcon.image = UIImage(named: "favorite")
+//            } else {
+//                starIcon.image = UIImage(named: "default")
+//            }
+//        }
+//    }
     
     @objc func starIconTapped() {
         if starIcon.image == UIImage(named: "favorite") {
@@ -94,7 +95,7 @@ final class MainTableViewCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "default") // "default" or "favorite"
+//        imageView.image = UIImage(named: "default") // "default" or "favorite"
         imageView.tintColor = UIColor(cgColor: CGColor(red: 1, green: 0.79, blue: 0.11, alpha: 1))
         return imageView
     }()
@@ -140,6 +141,7 @@ final class MainTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -249,7 +251,7 @@ extension MainTableViewCell {
     }
     
     
-    func configure(with indexPath: Int, companyName: String, companyTicker: String, currentPrice: Double, percentPrice: Double, priceChange: Double) {
+    func configure(with indexPath: Int, companyName: String, companyTicker: String, currentPrice: Double, percentPrice: Double, priceChange: Double, isFavorite: Bool) {
         if indexPath % 2 == 0 {
             containerView.layer.backgroundColor = UIColor.myGrayColor.cgColor
         } else {
@@ -267,6 +269,11 @@ extension MainTableViewCell {
             let temporary_percentPrice = String(format: "%.2f", percentPrice)
             percent_price.text = String("-$\(temporary_priceChange)(\(temporary_percentPrice)%)")
             percent_price.textColor = .systemRed
+        }
+        if isFavorite {
+            starIcon.image = UIImage(named: "favorite")
+        } else {
+            starIcon.image = UIImage(named: "default")
         }
     }
     
