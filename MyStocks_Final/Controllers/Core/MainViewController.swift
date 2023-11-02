@@ -16,6 +16,7 @@ final class MainViewController: UIViewController {
     private var stocksList: [StockMetaData] = []
     private var favouriteStocks: [StockMetaData] = []
     private var stockPrices: [String : StockPricesResponse] = [ : ]
+    private var filteredStocksList: [StockMetaData] = []
     var isFavoriteSelected: Bool = false
     let defaultStockImageLoad = DefaultStockImageLoad()
     private var logic: MainViewLogic!
@@ -78,6 +79,7 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        searchBar.delegate = self
         logicFunctions()
         setupButtons()
         setupTableView()
@@ -86,43 +88,9 @@ final class MainViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
-    
-    
-    private func logicFunctions() {
-        
-        logic = MainViewLogic(
-            stocksMetadataLocalDataSource: DefaultStocksMetadataLocalDataSource(),
-            stocksRemoteDataSource: DefaultStockRemoteDataSource()
-        )
-        
-        
-        logic.onDataFetched = { [weak self] stocksList in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.stocksList = stocksList
-                self.favouriteStocks = (self.stocksList.filter {
-                    self.defaults.bool(forKey: $0.ticker) == true
-                })
-                
-                self.stocksTableView.reloadData()
-            }
-        }
-        logic.onStockDataFetched = { [weak self] ticker, stockResponse, completion in
-            guard let self = self else {return}
-            stockPricesManager.saveStockPrices(ticker: ticker, stockResponse: stockResponse) {
-                if stockPricesManager.getStockPrices(ticker: ticker) != nil {
-                    self.stockPrices[ticker] = stockResponse
-                    DispatchQueue.main.async {
-                        self.stocksTableView.reloadData()
-                    }
-                } else { print("err") }
-            }
-        }
-        
-        logic.fetchStocks()
-    }
 }
 
+//MARK: - UITableViewFunctions
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -219,6 +187,62 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+//MARK: - MainViewLogic
+extension MainViewController {
+    private func logicFunctions() {
+        
+        logic = MainViewLogic(
+            stocksMetadataLocalDataSource: DefaultStocksMetadataLocalDataSource(),
+            stocksRemoteDataSource: DefaultStockRemoteDataSource()
+        )
+        
+        
+        logic.onDataFetched = { [weak self] stocksList in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.stocksList = stocksList
+                self.favouriteStocks = (self.stocksList.filter {
+                    self.defaults.bool(forKey: $0.ticker) == true
+                })
+                
+                self.stocksTableView.reloadData()
+            }
+        }
+        logic.onStockDataFetched = { [weak self] ticker, stockResponse, completion in
+            guard let self = self else {return}
+            stockPricesManager.saveStockPrices(ticker: ticker, stockResponse: stockResponse) {
+                if stockPricesManager.getStockPrices(ticker: ticker) != nil {
+                    self.stockPrices[ticker] = stockResponse
+                    DispatchQueue.main.async {
+                        self.stocksTableView.reloadData()
+                    }
+                } else { print("err") }
+            }
+        }
+        
+        logic.fetchStocks()
+    }
+}
+
+//MARK: - CustomSearchBarDelegate
+extension MainViewController: CustomSearchBarDelegate {
+    
+    private func updateFilteredStocksList(with searchText: String) {
+        filteredStocksList = stocksList.filter { stock in
+            return stock.name.contains(searchText) || stock.ticker.contains(searchText)
+        }
+        for i in filteredStocksList {
+            print(i.name)
+        }
+        stocksTableView.reloadData()
+    }
+    
+    func didChangeSearchText(searchText: String) {
+        updateFilteredStocksList(with: searchText)
+    }
+}
+
+//MARK: - MainTableViewCellDelegate Methods
 extension MainViewController: MainTableViewCellDelegate {
     func removeFromFavourite(model: StockMetaData) {
         defaults.removeObject(forKey: model.ticker)
@@ -234,7 +258,7 @@ extension MainViewController: MainTableViewCellDelegate {
     }
 }
 
-
+//MARK: - UISetup
 extension MainViewController {
     
     private func setupTableView() {

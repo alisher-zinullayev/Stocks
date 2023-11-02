@@ -14,10 +14,10 @@
             filePath = "MyStocks_Final/Controllers/Core/MainViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205"
-            landmarkName = "MainViewController"
-            landmarkType = "21">
+            startingLineNumber = "173"
+            endingLineNumber = "173"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
             <Locations>
                <Location
                   uuid = "87C6BCAA-BE0F-4A6E-A1BF-25333B7C5A5A - fb32209ef6a32cbd"
@@ -62,10 +62,10 @@
             filePath = "MyStocks_Final/Controllers/Core/MainViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "143"
-            endingLineNumber = "143"
-            landmarkName = "MainViewController"
-            landmarkType = "21">
+            startingLineNumber = "111"
+            endingLineNumber = "111"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
