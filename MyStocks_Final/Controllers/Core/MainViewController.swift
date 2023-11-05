@@ -15,8 +15,9 @@ final class MainViewController: UIViewController {
     
     private var stocksList: [StockMetaData] = []
     private var favouriteStocks: [StockMetaData] = []
+    private var searchStocksList: [StockMetaData] = []
+    private var searchfavouriteStocks: [StockMetaData] = []
     private var stockPrices: [String : StockPricesResponse] = [ : ]
-    private var filteredStocksList: [StockMetaData] = []
     var isFavoriteSelected: Bool = false
     let defaultStockImageLoad = DefaultStockImageLoad()
     private var logic: MainViewLogic!
@@ -95,97 +96,95 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isFavoriteSelected {
-            return favouriteStocks.count
+            return searchfavouriteStocks.count
         } else {
-            return stocksList.count
+            return searchStocksList.count
         }
     }
     
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.identifier, for: indexPath) as? MainTableViewCell else {return UITableViewCell()}
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.identifier, for: indexPath) as? MainTableViewCell else {
+            return UITableViewCell()
+        }
+        
         cell.delegate = self
+        let stock: StockMetaData
+        
+        let cardVC = CardViewController()
+        
         
         if isFavoriteSelected {
-            if favouriteStocks.isEmpty || indexPath.row >= favouriteStocks.count {
-                cell.configure(
-                    with: indexPath.row,
-                    companyName: "loading",
-                    companyTicker: "loading",
-                    currentPrice: 123,
-                    percentPrice: 123,
-                    priceChange: 123,
-                    isFavorite: true
-                )
-            } else {
-                let imageURL = favouriteStocks[indexPath.row].logo
-                let temporary_ticker = favouriteStocks[indexPath.row].ticker
-                cell.model = favouriteStocks[indexPath.row]
-                
-                cell.configure(
-                    with: indexPath.row,
-                    companyName: favouriteStocks[indexPath.row].name,
-                    companyTicker: favouriteStocks[indexPath.row].ticker,
-                    currentPrice: stockPrices[temporary_ticker]?.c ?? 12,
-                    percentPrice: stockPrices[temporary_ticker]?.dp ?? 12,
-                    priceChange: stockPrices[temporary_ticker]?.d ?? 12,
-                    isFavorite: defaults.bool(forKey: favouriteStocks[indexPath.row].ticker)
-                )
-                
-                Task {
-                    do {
-                        if let image = try await defaultStockImageLoad.fetchImage(urlString: imageURL) {
-                            DispatchQueue.main.async {
-                                cell.logo.image = image
-                            }
-                        }
-                    } catch {
-                        print("Error fetching image: \(error)")
-                    }
-                }
-            }
+            stock = searchfavouriteStocks[indexPath.row]
         } else {
-            if stocksList.isEmpty || indexPath.row >= stocksList.count {
-                cell.configure(
-                    with: indexPath.row,
-                    companyName: "loading",
-                    companyTicker: "loading",
-                    currentPrice: 123,
-                    percentPrice: 123,
-                    priceChange: 123,
-                    isFavorite: false
-                )
-            } else {
-            
-                let imageURL = stocksList[indexPath.row].logo
-                let temporary_ticker = stocksList[indexPath.row].ticker
-                
-                cell.configure(
-                    with: indexPath.row,
-                    companyName: stocksList[indexPath.row].name,
-                    companyTicker: stocksList[indexPath.row].ticker,
-                    currentPrice: stockPrices[temporary_ticker]?.c ?? 12,
-                    percentPrice: stockPrices[temporary_ticker]?.dp ?? 12,
-                    priceChange: stockPrices[temporary_ticker]?.d ?? 12,
-                    isFavorite: defaults.bool(forKey: stocksList[indexPath.row].ticker)
-                )
-                cell.model = stocksList[indexPath.row]
-                Task {
-                    do {
-                        if let image = try await defaultStockImageLoad.fetchImage(urlString: imageURL) {
-                            DispatchQueue.main.async {
-                                cell.logo.image = image
-                            }
-                        }
-                    } catch {
-                        print("Error fetching image: \(error)")
+            stock = searchStocksList[indexPath.row]
+        }
+        
+        let imageURL = stock.logo
+        let temporary_ticker = stock.ticker
+        cell.model = stock
+
+        cell.configure(
+            with: indexPath.row,
+            companyName: stock.name,
+            companyTicker: stock.ticker,
+            currentPrice: stockPrices[temporary_ticker]?.c ?? 12,
+            percentPrice: stockPrices[temporary_ticker]?.dp ?? 12,
+            priceChange: stockPrices[temporary_ticker]?.d ?? 12,
+            isFavorite: defaults.bool(forKey: stock.ticker)
+        )
+
+        Task {
+            do {
+                if let image = try await defaultStockImageLoad.fetchImage(urlString: imageURL) {
+                    DispatchQueue.main.async {
+                        cell.logo.image = image
                     }
                 }
+            } catch {
+                print("Error fetching image: \(error)")
             }
         }
         return cell
     }
 }
+
+//MARK: - CustomSearchBarDelegate
+extension MainViewController: CustomSearchBarDelegate {
+    
+    func didChangeSearchText(searchText: String) {
+        if searchText.isEmpty {
+            searchfavouriteStocks = favouriteStocks
+            searchStocksList = stocksList
+        } else {
+            searchfavouriteStocks = favouriteStocks
+            searchfavouriteStocks = favouriteStocks.filter({ stock in
+                return stock.name.contains(searchText) || stock.ticker.contains(searchText)
+            })
+            searchStocksList = stocksList
+            searchStocksList = stocksList.filter({ stock in
+                return stock.name.contains(searchText) || stock.ticker.contains(searchText)
+            })
+        }
+        stocksTableView.reloadData()
+    }
+}
+
+//MARK: - MainTableViewCellDelegate Methods
+extension MainViewController: MainTableViewCellDelegate {
+    func removeFromFavourite(model: StockMetaData) {
+        defaults.removeObject(forKey: model.ticker)
+        if let index = favouriteStocks.firstIndex(where: { $0 == model }) {
+            favouriteStocks.remove(at: index)
+        }
+        stocksTableView.reloadData()
+    }
+    
+    func addToFavourite(model: StockMetaData) {
+        defaults.set(true, forKey: model.ticker)
+        favouriteStocks.append(model)
+    }
+}
+
 
 //MARK: - MainViewLogic
 extension MainViewController {
@@ -201,6 +200,7 @@ extension MainViewController {
             guard let self = self else { return }
             DispatchQueue.main.async {
                 self.stocksList = stocksList
+                self.searchStocksList = stocksList
                 self.favouriteStocks = (self.stocksList.filter {
                     self.defaults.bool(forKey: $0.ticker) == true
                 })
@@ -224,39 +224,6 @@ extension MainViewController {
     }
 }
 
-//MARK: - CustomSearchBarDelegate
-extension MainViewController: CustomSearchBarDelegate {
-    
-    private func updateFilteredStocksList(with searchText: String) {
-        filteredStocksList = stocksList.filter { stock in
-            return stock.name.contains(searchText) || stock.ticker.contains(searchText)
-        }
-        for i in filteredStocksList {
-            print(i.name)
-        }
-        stocksTableView.reloadData()
-    }
-    
-    func didChangeSearchText(searchText: String) {
-        updateFilteredStocksList(with: searchText)
-    }
-}
-
-//MARK: - MainTableViewCellDelegate Methods
-extension MainViewController: MainTableViewCellDelegate {
-    func removeFromFavourite(model: StockMetaData) {
-        defaults.removeObject(forKey: model.ticker)
-        if let index = favouriteStocks.firstIndex(where: { $0 == model }) {
-            favouriteStocks.remove(at: index)
-        }
-        stocksTableView.reloadData()
-    }
-    
-    func addToFavourite(model: StockMetaData) {
-        defaults.set(true, forKey: model.ticker)
-        favouriteStocks.append(model)
-    }
-}
 
 //MARK: - UISetup
 extension MainViewController {

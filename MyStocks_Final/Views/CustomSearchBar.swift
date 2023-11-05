@@ -9,6 +9,7 @@ import UIKit
 
 protocol CustomSearchBarDelegate: AnyObject {
     func didChangeSearchText(searchText: String)
+//    func didTap(textField: UITextField)
 }
 
 final class CustomSearchBar: UIView {
@@ -118,7 +119,6 @@ extension CustomSearchBar: UITextFieldDelegate {
     @objc func textFieldDidChange(_ textField: UITextField) {
         if let text = textField.text {
             delegate?.didChangeSearchText(searchText: text)
-            print("Text changed: \(text)")
         }
     }
     

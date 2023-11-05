@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		43322E602AF6E14100A17656 /* CardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43322E5F2AF6E14100A17656 /* CardViewController.swift */; };
 		436CF84A2ABAB65C0096DC96 /* DefaultStockImageLoad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436CF8492ABAB65C0096DC96 /* DefaultStockImageLoad.swift */; };
 		436CF84F2ABB42D60096DC96 /* MainViewLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436CF84E2ABB42D60096DC96 /* MainViewLogic.swift */; };
 		436D6FF02AB9A7780014D2AD /* StockPricesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D6FEF2AB9A7780014D2AD /* StockPricesManager.swift */; };
@@ -28,6 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		43322E5F2AF6E14100A17656 /* CardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewController.swift; sourceTree = "<group>"; };
 		436CF8492ABAB65C0096DC96 /* DefaultStockImageLoad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultStockImageLoad.swift; sourceTree = "<group>"; };
 		436CF84E2ABB42D60096DC96 /* MainViewLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewLogic.swift; sourceTree = "<group>"; };
 		436D6FEF2AB9A7780014D2AD /* StockPricesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockPricesManager.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				43D72BA82AA9F0AF00372A0C /* MainViewController.swift */,
+				43322E5F2AF6E14100A17656 /* CardViewController.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 				436CF84F2ABB42D60096DC96 /* MainViewLogic.swift in Sources */,
 				436D6FF02AB9A7780014D2AD /* StockPricesManager.swift in Sources */,
 				43D72BB92AA9F0E400372A0C /* MainTableViewCell.swift in Sources */,
+				43322E602AF6E14100A17656 /* CardViewController.swift in Sources */,
 				43D72BBB2AA9F10C00372A0C /* StockMetaData.swift in Sources */,
 				436CF84A2ABAB65C0096DC96 /* DefaultStockImageLoad.swift in Sources */,
 				43D72BA72AA9F0AF00372A0C /* SceneDelegate.swift in Sources */,
