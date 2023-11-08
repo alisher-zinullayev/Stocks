@@ -19,6 +19,7 @@ final class MainTableViewCell: UITableViewCell {
     weak var delegate: MainTableViewCellDelegate?
     
     var model: StockMetaData?
+    
 // {
 //        didSet {
 //            if model?.isFavorite == true {
@@ -95,7 +96,6 @@ final class MainTableViewCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-//        imageView.image = UIImage(named: "default") // "default" or "favorite"
         imageView.tintColor = UIColor(cgColor: CGColor(red: 1, green: 0.79, blue: 0.11, alpha: 1))
         return imageView
     }()

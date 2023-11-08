@@ -9,7 +9,6 @@ import UIKit
 
 protocol CustomSearchBarDelegate: AnyObject {
     func didChangeSearchText(searchText: String)
-//    func didTap(textField: UITextField)
 }
 
 final class CustomSearchBar: UIView {
@@ -64,8 +63,8 @@ final class CustomSearchBar: UIView {
         view.backgroundColor = .white
         view.layer.backgroundColor = UIColor.clear.cgColor
         view.layer.cornerRadius = 20
-        view.layer.borderWidth = 1.0 // Set the border width
-        view.layer.borderColor = UIColor.black.cgColor // Set the border color
+        view.layer.borderWidth = 1.0
+        view.layer.borderColor = UIColor.black.cgColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

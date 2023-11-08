@@ -102,6 +102,26 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let stock: StockMetaData
+        if isFavoriteSelected {
+            stock = favouriteStocks[indexPath.row]
+        } else {
+            stock = stocksList[indexPath.row]
+        }
+        
+        let temporary_ticker = stock.ticker
+        let cardVC = CardViewController(
+            nameString: stock.name,
+            abbreviationString: stock.ticker,
+            isFavouriteBool: stock.isFavorite,
+            current_priceString: stockPrices[stock.ticker]?.c ?? 12,
+            price_changeString: stockPrices[temporary_ticker]?.d ?? 12,
+            percent_changeString: stockPrices[temporary_ticker]?.dp ?? 12
+        )
+        navigationController?.pushViewController(cardVC, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.identifier, for: indexPath) as? MainTableViewCell else {
             return UITableViewCell()
@@ -109,9 +129,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.delegate = self
         let stock: StockMetaData
-        
-        let cardVC = CardViewController()
-        
         
         if isFavoriteSelected {
             stock = searchfavouriteStocks[indexPath.row]
@@ -146,6 +163,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         }
         return cell
     }
+    
 }
 
 //MARK: - CustomSearchBarDelegate
@@ -195,7 +213,6 @@ extension MainViewController {
             stocksRemoteDataSource: DefaultStockRemoteDataSource()
         )
         
-        
         logic.onDataFetched = { [weak self] stocksList in
             guard let self = self else { return }
             DispatchQueue.main.async {
@@ -208,6 +225,7 @@ extension MainViewController {
                 self.stocksTableView.reloadData()
             }
         }
+        
         logic.onStockDataFetched = { [weak self] ticker, stockResponse, completion in
             guard let self = self else {return}
             stockPricesManager.saveStockPrices(ticker: ticker, stockResponse: stockResponse) {
@@ -253,9 +271,10 @@ extension MainViewController {
         let searchBarConstraints = [
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
             searchBar.heightAnchor.constraint(equalToConstant: 48)
         ]
+        
         let stocksButtonConstraints = [
             stocksButton.heightAnchor.constraint(equalToConstant: 32),
             stocksButton.widthAnchor.constraint(equalToConstant: 98),
