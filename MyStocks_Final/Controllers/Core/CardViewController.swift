@@ -316,11 +316,3 @@ extension CardViewController: UICollectionViewDelegate, UICollectionViewDataSour
         return cell
     }
 }
-
-extension MainViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = 44
-        let height = 44
-        return CGSize(width: width, height: height)
-    }
-}

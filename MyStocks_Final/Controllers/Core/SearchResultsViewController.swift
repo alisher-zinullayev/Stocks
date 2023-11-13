@@ -7,7 +7,8 @@
 
 import UIKit
 
-class SearchResultsViewController: UIViewController {
+/*
+class SearchResultsViewController: UIView {
     
     private let popular_brands: [String] = ["Apple", "Amazon", "Google", "Tesla", "Microsoft", "First Solar", "Alibaba", "Facebook", "MasterCard"]
     private var searched_brands: [String] = ["Apple", "Amazon", "Google", "Tesla", "Microsoft", "First Solar", "Alibaba", "Facebook", "MasterCard"]
@@ -38,26 +39,35 @@ class SearchResultsViewController: UIViewController {
         return label
     }()
     
-    private lazy var collectionViewPopularRequests: UICollectionView = {
+    private let collectionViewPopularRequests: UICollectionView = {
         let layout = CustomCollectionViewLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.isScrollEnabled = false
         collection.translatesAutoresizingMaskIntoConstraints = false
         collection.showsHorizontalScrollIndicator = false
         collection.clipsToBounds = false
-        collection.backgroundColor = .clear
         collection.register(SearchResultsCollectionViewCell.self, forCellWithReuseIdentifier: SearchResultsCollectionViewCell.identifier)
         return collection
     }()
     
     private let collectionViewSearchHistory: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(SearchResultsCollectionViewCell.self, forCellWithReuseIdentifier: SearchResultsCollectionViewCell.identifier)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        return collectionView
+        let layout = CustomCollectionViewLayout()
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.isScrollEnabled = false
+        collection.translatesAutoresizingMaskIntoConstraints = false
+        collection.showsHorizontalScrollIndicator = false
+        collection.clipsToBounds = false
+        collection.register(SearchResultsCollectionViewCell.self, forCellWithReuseIdentifier: SearchResultsCollectionViewCell.identifier)
+        return collection
     }()
+    
+    init(searched_brands: [String]) {
+        self.searched_brands = searched_brands
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,8 +91,8 @@ class SearchResultsViewController: UIViewController {
         ]
         let collectionViewPopularRequestsConstraints = [
             collectionViewPopularRequests.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            collectionViewPopularRequests.topAnchor.constraint(equalTo: popular_requests_string.bottomAnchor, constant: 11),
-            collectionViewPopularRequests.heightAnchor.constraint(equalToConstant: 500),
+            collectionViewPopularRequests.topAnchor.constraint(equalTo: popular_requests_string.bottomAnchor, constant: 11), //
+            collectionViewPopularRequests.heightAnchor.constraint(equalToConstant: 110),
             collectionViewPopularRequests.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ]
         let search_history_stringConstraints = [
@@ -104,7 +114,7 @@ class SearchResultsViewController: UIViewController {
     
 }
 
-extension SearchResultsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension SearchResultsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == collectionViewPopularRequests {
             return popular_brands.count
@@ -120,11 +130,19 @@ extension SearchResultsViewController: UICollectionViewDelegate, UICollectionVie
         if collectionView == collectionViewPopularRequests {
             cell.configure(withText: popular_brands[indexPath.row])
         } else if collectionView == collectionViewSearchHistory {
-            cell.configure(withText: popular_brands[indexPath.row])
+            cell.configure(withText: searched_brands[indexPath.row])
         }
         return cell
     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize( width: (popular_brands[indexPath.item].size( withAttributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)]).width) + 25,height: 40)
+        return CGSize(
+            width: (popular_brands[indexPath.item].size(
+                withAttributes:
+                    [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)]).width) + 25,
+                height: 40
+            )
+        
     }
 }
+*/

@@ -9,6 +9,7 @@ import UIKit
 
 protocol CustomSearchBarDelegate: AnyObject {
     func didChangeSearchText(searchText: String)
+    func switchToSearchResultController()
 }
 
 final class CustomSearchBar: UIView {
@@ -117,13 +118,19 @@ extension CustomSearchBar: UITextFieldDelegate {
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         if let text = textField.text {
-            delegate?.didChangeSearchText(searchText: text)
+            if text == "" {
+                delegate?.switchToSearchResultController()
+            } else {
+                delegate?.didChangeSearchText(searchText: text)
+            }
         }
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
+    func textFieldDidBeginEditing(_ textField: UITextField) { // osy jakta isHidden bolu kerek
         updateSearchBarImages(forState: .focus)
         searchBar.placeholder = ""
+        print("textFieldDidBeginEditing")
+        delegate?.switchToSearchResultController()
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

@@ -7,22 +7,29 @@
 
 import UIKit
 
-final class CustomCollectionViewLayout: UICollectionViewLayout {
-
-    let cellSpacing: CGFloat = 12
+final class CustomCollectionViewLayout: UICollectionViewFlowLayout {
 
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        if let attributes = super.layoutAttributesForElements(in: rect) {
-        for (index, attribute) in attributes.enumerated() {
-                if index == 0 { continue }
-                let prevLayoutAttributes = attributes[index - 1]
-                let origin = CGRectGetMaxX(prevLayoutAttributes.frame)
-            if(origin + cellSpacing + attribute.frame.size.width < self.collectionViewContentSize.width) {
-                    attribute.frame.origin.x = origin + cellSpacing
-                }
-            }
-            return attributes
+
+        sectionInset = UIEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
+        minimumLineSpacing = 15
+
+        guard let originalAttributes = super.layoutAttributesForElements(in: rect) else {
+            return nil
         }
-        return nil
+
+        var leftMargin: CGFloat = sectionInset.left
+        var maxY: CGFloat = -1.0
+        let attributes = originalAttributes.map { (attribute) -> UICollectionViewLayoutAttributes in
+            if attribute.frame.maxY > maxY {
+                leftMargin = sectionInset.left
+                maxY = attribute.frame.maxY
+            }
+            attribute.frame.origin.x = leftMargin
+            leftMargin += attribute.frame.width + minimumLineSpacing
+            return attribute
+        }
+        return attributes
+
     }
 }
