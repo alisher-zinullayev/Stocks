@@ -110,27 +110,6 @@ final class MainViewController: UIViewController {
         return collection
     }()
     
-//    lazy var isHiddenButton: UIButton = {
-//        let button = UIButton()
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        button.setTitle("Hide TableView", for: .normal)
-//        button.setTitleColor(.gray, for: .normal)
-//        button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-//        button.setTitleColor(.gray, for: .normal)
-//        button.addTarget(self, action: #selector(hideTableView), for: .touchUpInside)
-//        return button
-//    }()
-    
-//    @objc func hideTableView() {
-//        hideTableViewS()
-//    }
-    
-//    func hideTableViewS() {
-//        favoriteButton.isHidden = true
-//        stocksButton.isHidden = true
-//        stocksTableView.isHidden = true
-//    }
-    
     @objc func stocksButtonTapped() {
         stocksButton.titleLabel?.font = UIFont.systemFont(ofSize: 28, weight: .bold)
         favoriteButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
@@ -193,7 +172,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         let stock: StockMetaData
         if isFavoriteSelected {
-        // stocksTableView[indexPath.row]
             stock = searchfavouriteStocks[indexPath.row]
         } else {
             stock = searchStocksList[indexPath.row]

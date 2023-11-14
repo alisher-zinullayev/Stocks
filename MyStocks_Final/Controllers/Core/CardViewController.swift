@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import DGCharts
 
 final class CardViewController: UIViewController {
     
@@ -17,6 +18,14 @@ final class CardViewController: UIViewController {
     var percent_changeString: Double
     
     private let dates = ["D", "W", "M", "6M", "1Y", "All"]
+    
+    var values: [StockChartValues] = []
+    var valuesForChart: [ChartDataEntry] = [
+//        ChartDataEntry(x: 0.0, y: 0.0),
+        ChartDataEntry(x: 1.0, y: 182.0),
+//        ChartDataEntry(x: 2.0, y: 7.0),
+//        ChartDataEntry(x: 3.0, y: 0.0)
+    ]
     
     init(nameString: String, abbreviationString: String, isFavouriteBool: Bool, current_priceString: Double, price_changeString: Double, percent_changeString: Double) {
         self.nameString = nameString
@@ -47,6 +56,65 @@ final class CardViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(backButtonTapped))
         backButton.isUserInteractionEnabled = true
         backButton.addGestureRecognizer(tapGesture)
+        lineChartView.delegate = self
+        Task { [weak self] in
+            do {
+                let values = try await DefaultChartsMetaDataSource().fetchStocksChartData(ticker: "AAPL", start: "1697361279", end: "1699953001")
+                self?.values = values
+                print(values)
+                DispatchQueue.main.async { [weak self] in
+                    for (index, stockValue) in values.enumerated() {
+                        print("Index: \(index), StockChartValues: \(stockValue)")
+                        for (cIndex, cValue) in stockValue.c.enumerated() {
+                            print("cIndex: \(cIndex), cValue: \(cValue)")
+                        }
+                        let chartEntry = ChartDataEntry(x: Double(index)+0.0, y: stockValue.c[0]) // Assuming c is an array and you want the first element
+                        self?.valuesForChart.append(chartEntry)
+                    }
+                    self?.setData()
+                }
+                
+            } catch {
+                print("Error fetching stock chart data: \(error)")
+            }
+        }
+        setData()
+    }
+    
+    // DateController
+    
+    let currentDate = Date()
+    
+    func oneDayBeforeUnixTimestamp() -> TimeInterval {
+        let currentDate = Date()
+        let oneDayInSeconds: TimeInterval = 24 * 60 * 60
+        let oneDayBeforeTimestamp = currentDate.timeIntervalSince1970 - oneDayInSeconds
+
+        return oneDayBeforeTimestamp
+    }
+    
+    func oneWeekBeforeUnixTimestamp() -> TimeInterval {
+        let currentDate = Date()
+        let oneDayInSeconds: TimeInterval = 24 * 60 * 60 * 7
+        let oneDayBeforeTimestamp = currentDate.timeIntervalSince1970 - oneDayInSeconds
+
+        return oneDayBeforeTimestamp
+    }
+    
+    func oneMonthBeforeUnixTimestamp() -> TimeInterval {
+        let currentDate = Date()
+        let oneDayInSeconds: TimeInterval = 24 * 60 * 60 * 30
+        let oneDayBeforeTimestamp = currentDate.timeIntervalSince1970 - oneDayInSeconds
+
+        return oneDayBeforeTimestamp
+    }
+    
+    func oneYearBeforeUnixTimestamp() -> TimeInterval {
+        let currentDate = Date()
+        let oneDayInSeconds: TimeInterval = 24 * 60 * 60 * 30
+        let oneDayBeforeTimestamp = currentDate.timeIntervalSince1970 - oneDayInSeconds
+
+        return oneDayBeforeTimestamp
     }
     
     private let backButton: UIImageView = {
@@ -170,11 +238,15 @@ final class CardViewController: UIViewController {
         return label
     }()
     
-    
-    private let stockGraphView: StockGraphView = {
-        let view = StockGraphView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    lazy var lineChartView: LineChartView = {
+        let chartView = LineChartView()
+        chartView.backgroundColor = .white
+        chartView.rightAxis.enabled = false
+        chartView.leftAxis.enabled = false
+        chartView.xAxis.enabled = false
+        chartView.animate(xAxisDuration: 2.0)
+        chartView.translatesAutoresizingMaskIntoConstraints = false
+        return chartView
     }()
     
     private let collectionView: UICollectionView = {
@@ -186,6 +258,51 @@ final class CardViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
+}
+
+extension CardViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return dates.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: YearCollectionViewCell.identifier, for: indexPath) as? YearCollectionViewCell else { return UICollectionViewCell() }
+        cell.configure(label: dates[indexPath.row])
+        return cell
+    }
+}
+
+extension CardViewController: ChartViewDelegate {
+    
+    func setData() {
+        let colors: [CGColor] = [
+            UIColor.white.cgColor,
+            UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1).cgColor
+        ]
+        let locations: [CGFloat] = [0.0, 1.0]
+        let gradient = CGGradient(colorsSpace: nil, colors: colors as CFArray, locations: locations)
+
+        let set1 = LineChartDataSet(entries: valuesForChart, label: "")
+        set1.mode = .cubicBezier
+        set1.drawCirclesEnabled = false
+        set1.lineWidth = 2
+        set1.setColor(UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
+        set1.fill = LinearGradientFill(gradient: gradient!, angle: 90)
+        set1.fillAlpha = 0.2
+        set1.drawFilledEnabled = true
+        set1.drawHorizontalHighlightIndicatorEnabled = false
+        set1.drawVerticalHighlightIndicatorEnabled = false
+        set1.highlightColor = .black
+        
+        
+        let data = LineChartData(dataSet: set1)
+//        data.setDrawValues(false)
+        lineChartView.data = data
+    }
+}
+
+// UI-Setup
+extension CardViewController {
     
     private func setupUI() {
         
@@ -198,7 +315,7 @@ final class CardViewController: UIViewController {
         view.addSubview(newsButton)
         view.addSubview(forecastsButton)
         view.addSubview(ideasButton)
-        view.addSubview(stockGraphView)
+        view.addSubview(lineChartView)
         view.addSubview(current_price)
         view.addSubview(price_change)
         
@@ -252,11 +369,6 @@ final class CardViewController: UIViewController {
             ideasButton.heightAnchor.constraint(equalToConstant: 20),
             ideasButton.leadingAnchor.constraint(equalTo: forecastsButton.trailingAnchor, constant: 20)
         ]
-        let stockGraphViewConstraints = [
-            stockGraphView.topAnchor.constraint(equalTo: chartButton.bottomAnchor, constant: 20),
-            stockGraphView.heightAnchor.constraint(equalToConstant: 464),
-            stockGraphView.widthAnchor.constraint(equalTo: view.widthAnchor)
-        ]
         let current_priceConstraints = [
             current_price.topAnchor.constraint(equalTo: chartButton.bottomAnchor, constant: 62),
             current_price.centerXAnchor.constraint(equalTo: view.centerXAnchor)
@@ -264,6 +376,11 @@ final class CardViewController: UIViewController {
         let price_changeConstraints = [
             price_change.topAnchor.constraint(equalTo: current_price.bottomAnchor, constant: 8),
             price_change.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ]
+        let stockGraphViewConstraints = [
+            lineChartView.topAnchor.constraint(equalTo: price_change.bottomAnchor, constant: 10),
+            lineChartView.heightAnchor.constraint(equalToConstant: 280), // 464
+            lineChartView.widthAnchor.constraint(equalTo: view.widthAnchor)
         ]
         
         NSLayoutConstraint.activate(backConstraints)
@@ -275,9 +392,9 @@ final class CardViewController: UIViewController {
         NSLayoutConstraint.activate(newsButtonConstraints)
         NSLayoutConstraint.activate(forecastsButtonConstraints)
         NSLayoutConstraint.activate(ideasButtonConstraints)
-        NSLayoutConstraint.activate(stockGraphViewConstraints)
         NSLayoutConstraint.activate(current_priceConstraints)
         NSLayoutConstraint.activate(price_changeConstraints)
+        NSLayoutConstraint.activate(stockGraphViewConstraints)
     }
     
     private func setupCollectionView() {
@@ -289,7 +406,7 @@ final class CardViewController: UIViewController {
         whiteBackgroundView.backgroundColor = UIColor.white
         collectionView.backgroundView = whiteBackgroundView
         collectionView.backgroundColor = .red
-        collectionView.topAnchor.constraint(equalTo: stockGraphView.bottomAnchor, constant: 0).isActive = true
+        collectionView.topAnchor.constraint(equalTo: lineChartView.bottomAnchor, constant: 40).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
         collectionView.heightAnchor.constraint(equalToConstant: 44).isActive = true
@@ -302,17 +419,5 @@ final class CardViewController: UIViewController {
         if let lastCell = collectionView.cellForItem(at: lastIndexPath) as? YearCollectionViewCell {
             lastCell.isSelected = true
         }
-    }
-}
-
-extension CardViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dates.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: YearCollectionViewCell.identifier, for: indexPath) as? YearCollectionViewCell else { return UICollectionViewCell() }
-        cell.configure(label: dates[indexPath.row])
-        return cell
     }
 }
