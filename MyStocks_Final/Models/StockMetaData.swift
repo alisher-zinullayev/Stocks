@@ -18,8 +18,6 @@ class StockMetaData: Codable {
         self.name = try container.decode(String.self, forKey: .name)
         self.ticker = try container.decode(String.self, forKey: .ticker)
         self.logo = try container.decode(String.self, forKey: .logo)
-//        let logoString = try container.decode(String.self, forKey: .logo)
-//        self.logo = URL(string: logoString)
         self.isFavorite = false
     }
 

@@ -7,5 +7,6 @@ target 'MyStocks_Final' do
 
   # Pods for MyStocks_Final
 	pod 'DGCharts'
+	pod 'SnapKit'
 
 end

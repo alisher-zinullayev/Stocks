@@ -8,12 +8,12 @@
 import Foundation
 
 protocol StocksChartsMetaDataSource {
-    func fetchStocksChartData(ticker: String, start: String, end: String) async throws -> [StockChartValues]
+    func fetchStocksChartData(ticker: String, start: String, end: String, type: String) async throws -> [StockChartValues]
 }
 
 final class DefaultChartsMetaDataSource: StocksChartsMetaDataSource {
-    func fetchStocksChartData(ticker: String, start: String, end: String) async throws -> [StockChartValues] {
-        guard let url = URL(string: "https://finnhub.io/api/v1/stock/candle?symbol=\(ticker)&resolution=D&from=\(start)&to=\(end)&token=cii2as9r01quio6uh8lgcii2as9r01quio6uh8m0") else {
+    func fetchStocksChartData(ticker: String, start: String, end: String, type: String) async throws -> [StockChartValues] {
+        guard let url = URL(string: "https://finnhub.io/api/v1/stock/candle?symbol=\(ticker)&resolution=\(type)&from=\(start)&to=\(end)&token=cii2as9r01quio6uh8lgcii2as9r01quio6uh8m0") else {
             print("from url")
             throw NetworkError.invalidURL
         }

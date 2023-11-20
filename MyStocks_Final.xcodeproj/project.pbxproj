@@ -14,6 +14,7 @@
 		436CF84A2ABAB65C0096DC96 /* DefaultStockImageLoad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436CF8492ABAB65C0096DC96 /* DefaultStockImageLoad.swift */; };
 		436CF84F2ABB42D60096DC96 /* MainViewLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436CF84E2ABB42D60096DC96 /* MainViewLogic.swift */; };
 		436D6FF02AB9A7780014D2AD /* StockPricesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436D6FEF2AB9A7780014D2AD /* StockPricesManager.swift */; };
+		4374DEC52B0758EA00DC2D4E /* MainViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4374DEC42B0758EA00DC2D4E /* MainViewStore.swift */; };
 		4376DE132AE3EAD400507354 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4376DE112AE3EAD300507354 /* DataModel.xcdatamodeld */; };
 		437FA9ED2B0329B300274558 /* DefaultChartsMetaDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437FA9EC2B0329B300274558 /* DefaultChartsMetaDataSource.swift */; };
 		438545CF2AB07B3C00DE6E09 /* DefaultStockRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438545CE2AB07B3C00DE6E09 /* DefaultStockRemoteDataSource.swift */; };
@@ -43,6 +44,7 @@
 		436CF8492ABAB65C0096DC96 /* DefaultStockImageLoad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultStockImageLoad.swift; sourceTree = "<group>"; };
 		436CF84E2ABB42D60096DC96 /* MainViewLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewLogic.swift; sourceTree = "<group>"; };
 		436D6FEF2AB9A7780014D2AD /* StockPricesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockPricesManager.swift; sourceTree = "<group>"; };
+		4374DEC42B0758EA00DC2D4E /* MainViewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewStore.swift; sourceTree = "<group>"; };
 		4376DE122AE3EAD400507354 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		437FA9EC2B0329B300274558 /* DefaultChartsMetaDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultChartsMetaDataSource.swift; sourceTree = "<group>"; };
 		438545CE2AB07B3C00DE6E09 /* DefaultStockRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultStockRemoteDataSource.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				43D72BA82AA9F0AF00372A0C /* MainViewController.swift */,
+				4374DEC42B0758EA00DC2D4E /* MainViewStore.swift */,
 				43322E5F2AF6E14100A17656 /* CardViewController.swift */,
 			);
 			path = Core;
@@ -349,6 +352,7 @@
 				436D6FF02AB9A7780014D2AD /* StockPricesManager.swift in Sources */,
 				430FB9912AFAA02400FC04D0 /* SearchResultsCollectionViewCell.swift in Sources */,
 				43D72BB92AA9F0E400372A0C /* MainTableViewCell.swift in Sources */,
+				4374DEC52B0758EA00DC2D4E /* MainViewStore.swift in Sources */,
 				43322E602AF6E14100A17656 /* CardViewController.swift in Sources */,
 				43D72BBB2AA9F10C00372A0C /* StockMetaData.swift in Sources */,
 				436CF84A2ABAB65C0096DC96 /* DefaultStockImageLoad.swift in Sources */,

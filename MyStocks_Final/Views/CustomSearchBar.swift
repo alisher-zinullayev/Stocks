@@ -118,7 +118,7 @@ extension CustomSearchBar: UITextFieldDelegate {
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         if let text = textField.text {
-            if text == "" {
+            if text.isEmpty {
                 delegate?.switchToSearchResultController()
             } else {
                 delegate?.didChangeSearchText(searchText: text)

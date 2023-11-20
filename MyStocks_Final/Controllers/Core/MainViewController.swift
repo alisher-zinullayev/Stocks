@@ -22,7 +22,7 @@ final class MainViewController: UIViewController {
     private var searched_brands: [String] = ["Apple", "Amazon", "Google", "Tesla", "Microsoft", "First Solar", "Alibaba", "Facebook", "MasterCard"]
     var isFavoriteSelected: Bool = false
     let defaultStockImageLoad = DefaultStockImageLoad()
-    private var logic: MainViewLogic!
+    private var logic: DefaultMainViewLogic!
     
     private let searchBar: CustomSearchBar = {
         let view = CustomSearchBar()
@@ -62,7 +62,7 @@ final class MainViewController: UIViewController {
     }()
     
     // Collection View Methods
-    private let popular_requests_string: UILabel = {
+    private let popularRequestsLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.frame = CGRect(x: 0, y: 0, width: 161, height: 24)
@@ -75,7 +75,7 @@ final class MainViewController: UIViewController {
         return label
     }()
     
-    private let search_history_string: UILabel = {
+    private let searchHistoryLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.frame = CGRect(x: 0, y: 0, width: 226, height: 24)
@@ -88,7 +88,7 @@ final class MainViewController: UIViewController {
         return label
     }()
     
-    private let collectionViewPopularRequests: UICollectionView = {
+    private let popularRequestsCV: UICollectionView = {
         let layout = CustomCollectionViewLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.isScrollEnabled = false
@@ -99,7 +99,7 @@ final class MainViewController: UIViewController {
         return collection
     }()
     
-    private let collectionViewSearchHistory: UICollectionView = {
+    private let searchHistoryCV: UICollectionView = {
         let layout = CustomCollectionViewLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.isScrollEnabled = false
@@ -136,17 +136,8 @@ final class MainViewController: UIViewController {
         setupButtons()
         setupTableView()
         setupSecondUI()
-        collectionViewPopularRequests.delegate = self
-        collectionViewPopularRequests.dataSource = self
-        collectionViewSearchHistory.delegate = self
-        collectionViewSearchHistory.dataSource = self
-        collectionViewSearchHistory.isHidden = true
-        collectionViewPopularRequests.isHidden = true
-        popular_requests_string.isHidden = true
-        search_history_string.isHidden = true
-        favoriteButton.isHidden = false
-        stocksButton.isHidden = false
-        stocksTableView.isHidden = false
+        setCVDelegates()
+        isMainPage(true)
     }
     
     override func viewDidLayoutSubviews() {
@@ -166,10 +157,10 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.identifier, for: indexPath) as? MainTableViewCell
-        
-        cell!.delegate = self
-        
+//        let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.identifier, for: indexPath) as? MainTableViewCell
+//        
+//        cell!.delegate = self
+//        
         let stock: StockMetaData
         if isFavoriteSelected {
             stock = searchfavouriteStocks[indexPath.row]
@@ -182,9 +173,9 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             nameString: stock.name,
             abbreviationString: stock.ticker,
             isFavouriteBool: stock.isFavorite,
-            current_priceString: stockPrices[stock.ticker]?.c ?? 12,
-            price_changeString: stockPrices[temporary_ticker]?.d ?? 12,
-            percent_changeString: stockPrices[temporary_ticker]?.dp ?? 12
+            current_priceString: stockPrices[stock.ticker]?.c ?? Constanst.defaultPrice,
+            price_changeString: stockPrices[temporary_ticker]?.d ?? Constanst.defaultPrice,
+            percent_changeString: stockPrices[temporary_ticker]?.dp ?? Constanst.defaultPrice
         )
         
         navigationController?.pushViewController(cardVC, animated: true)
@@ -212,9 +203,9 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             with: indexPath.row,
             companyName: stock.name,
             companyTicker: stock.ticker,
-            currentPrice: stockPrices[temporary_ticker]?.c ?? 12,
-            percentPrice: stockPrices[temporary_ticker]?.dp ?? 12,
-            priceChange: stockPrices[temporary_ticker]?.d ?? 12,
+            currentPrice: stockPrices[temporary_ticker]?.c ?? Constanst.defaultPrice,
+            percentPrice: stockPrices[temporary_ticker]?.dp ?? Constanst.defaultPrice,
+            priceChange: stockPrices[temporary_ticker]?.d ?? Constanst.defaultPrice,
             isFavorite: defaults.bool(forKey: stock.ticker)
         )
 
@@ -238,13 +229,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 extension MainViewController: CustomSearchBarDelegate {
     
     func switchToSearchResultController() {
-        collectionViewSearchHistory.isHidden = false
-        collectionViewPopularRequests.isHidden = false
-        popular_requests_string.isHidden = false
-        search_history_string.isHidden = false
-        favoriteButton.isHidden = true
-        stocksButton.isHidden = true
-        stocksTableView.isHidden = true
+        isMainPage(false)
     }
     
     func didChangeSearchText(searchText: String) {
@@ -263,13 +248,8 @@ extension MainViewController: CustomSearchBarDelegate {
                 return stock.name.contains(searchText) || stock.ticker.contains(searchText)
             })
         }
-        collectionViewSearchHistory.isHidden = true
-        collectionViewPopularRequests.isHidden = true
-        popular_requests_string.isHidden = true
-        search_history_string.isHidden = true
-        favoriteButton.isHidden = false
-        stocksButton.isHidden = false
-        stocksTableView.isHidden = false
+        
+        isMainPage(true)
         
         stocksTableView.reloadData()
     }
@@ -296,7 +276,7 @@ extension MainViewController: MainTableViewCellDelegate {
 extension MainViewController {
     private func logicFunctions() {
         
-        logic = MainViewLogic(
+        logic = DefaultMainViewLogic(
             stocksMetadataLocalDataSource: DefaultStocksMetadataLocalDataSource(),
             stocksRemoteDataSource: DefaultStockRemoteDataSource()
         )
@@ -337,14 +317,11 @@ extension MainViewController {
     private func setupTableView() {
         view.addSubview(stocksTableView)
         
-        let stocksTableViewConstraints = [
-            stocksTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stocksTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stocksTableView.topAnchor.constraint(equalTo: stocksButton.bottomAnchor, constant: 20),
-            stocksTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ]
-        NSLayoutConstraint.activate(stocksTableViewConstraints)
-        
+        stocksTableView.snp.makeConstraints { maker in
+            maker.leading.trailing.bottom.equalToSuperview()
+            maker.top.equalTo(stocksButton.snp.bottom).offset(20)
+        }
+
         stocksTableView.delegate = self
         stocksTableView.dataSource = self
         stocksTableView.separatorStyle = .none
@@ -356,69 +333,94 @@ extension MainViewController {
         view.addSubview(favoriteButton)
         view.addSubview(searchBar)
         
-        let searchBarConstraints = [
-            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
-            searchBar.heightAnchor.constraint(equalToConstant: 48)
-        ]
+        searchBar.snp.makeConstraints { maker in
+            maker.leading.trailing.equalToSuperview()
+            maker.top.equalTo(view.safeAreaLayoutGuide)
+            maker.height.equalTo(48)
+        }
         
-        let stocksButtonConstraints = [
-            stocksButton.heightAnchor.constraint(equalToConstant: 32),
-            stocksButton.widthAnchor.constraint(equalToConstant: 98),
-            stocksButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            stocksButton.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 20) // 20 or 28
-        ]
-        let favoriteButtonConstraints = [
-            favoriteButton.heightAnchor.constraint(equalToConstant: 32),
-            favoriteButton.leadingAnchor.constraint(equalTo: stocksButton.trailingAnchor, constant: 20),
-            favoriteButton.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 20) // 20 or 28
-        ]
-        NSLayoutConstraint.activate(stocksButtonConstraints)
-        NSLayoutConstraint.activate(favoriteButtonConstraints)
-        NSLayoutConstraint.activate(searchBarConstraints)
+        stocksButton.snp.makeConstraints { maker in
+            maker.height.equalTo(32)
+            maker.width.equalTo(98)
+            maker.leading.equalToSuperview().offset(20)
+            maker.top.equalTo(searchBar.snp.bottom).offset(20)
+        }
+        
+        favoriteButton.snp.makeConstraints { maker in
+            maker.height.equalTo(32)
+            maker.leading.equalTo(stocksButton.snp.trailing).offset(20)
+            maker.top.equalTo(searchBar.snp.bottom).offset(20)
+        }
     }
     
     private func setupSecondUI() {
-        view.addSubview(popular_requests_string)
-        view.addSubview(search_history_string)
-        view.addSubview(collectionViewPopularRequests)
-        view.addSubview(collectionViewSearchHistory)
+        view.addSubview(popularRequestsLabel)
+        view.addSubview(searchHistoryLabel)
+        view.addSubview(popularRequestsCV)
+        view.addSubview(searchHistoryCV)
         
-        let popular_requests_stringConstraints = [
-            popular_requests_string.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            popular_requests_string.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 32)
-        ]
-        let collectionViewPopularRequestsConstraints = [
-            collectionViewPopularRequests.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            collectionViewPopularRequests.topAnchor.constraint(equalTo: popular_requests_string.bottomAnchor, constant: 11), //
-            collectionViewPopularRequests.heightAnchor.constraint(equalToConstant: 110),
-            collectionViewPopularRequests.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ]
-        let search_history_stringConstraints = [
-            search_history_string.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            search_history_string.topAnchor.constraint(equalTo: collectionViewPopularRequests.bottomAnchor, constant: 28)
-        ]
-        let collectionViewSearchHistoryConstraints = [
-            collectionViewSearchHistory.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            collectionViewSearchHistory.topAnchor.constraint(equalTo: search_history_string.bottomAnchor, constant: 11),
-            collectionViewSearchHistory.heightAnchor.constraint(equalToConstant: 110),
-            collectionViewSearchHistory.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ]
+        popularRequestsLabel.snp.makeConstraints { maker in
+            maker.leading.equalToSuperview().offset(20)
+            maker.top.equalTo(searchBar.snp.bottom).offset(32)
+        }
         
-        NSLayoutConstraint.activate(popular_requests_stringConstraints)
-        NSLayoutConstraint.activate(collectionViewPopularRequestsConstraints)
-        NSLayoutConstraint.activate(search_history_stringConstraints)
-        NSLayoutConstraint.activate(collectionViewSearchHistoryConstraints)
+        popularRequestsCV.snp.makeConstraints { maker in
+            maker.leading.equalToSuperview().offset(16)
+            maker.trailing.equalToSuperview()
+            maker.top.equalTo(popularRequestsLabel.snp.bottom).offset(11)
+            maker.height.equalTo(110)
+        }
+        
+        searchHistoryLabel.snp.makeConstraints { maker in
+            maker.leading.equalToSuperview().offset(20)
+            maker.top.equalTo(popularRequestsCV.snp.bottom).offset(28)
+        }
+        
+        searchHistoryCV.snp.makeConstraints { maker in
+            maker.leading.equalToSuperview().offset(16)
+            maker.trailing.equalToSuperview()
+            maker.top.equalTo(searchHistoryLabel.snp.bottom).offset(11)
+            maker.height.equalTo(110)
+        }
+    }
+    
+    private func setCVDelegates() {
+        popularRequestsCV.delegate = self
+        popularRequestsCV.dataSource = self
+        searchHistoryCV.delegate = self
+        searchHistoryCV.dataSource = self
+    }
+    
+    private func isMainPage(_ mainPage: Bool) {
+        if mainPage {
+            searchHistoryCV.isHidden = true
+            popularRequestsCV.isHidden = true
+            popularRequestsLabel.isHidden = true
+            searchHistoryLabel.isHidden = true
+            favoriteButton.isHidden = false
+            stocksButton.isHidden = false
+            stocksTableView.isHidden = false
+        } else {
+            searchHistoryCV.isHidden = false
+            popularRequestsCV.isHidden = false
+            popularRequestsLabel.isHidden = false
+            searchHistoryLabel.isHidden = false
+            favoriteButton.isHidden = true
+            stocksButton.isHidden = true
+            stocksTableView.isHidden = true
+        }
     }
     
 }
 
+
+//MARK: - UICollectionDelegates
+
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == collectionViewPopularRequests {
+        if collectionView == popularRequestsCV {
             return popular_brands.count
-        } else if collectionView == collectionViewSearchHistory {
+        } else if collectionView == searchHistoryCV {
             return searched_brands.count
         }
         return 0
@@ -427,9 +429,9 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchResultsCollectionViewCell.identifier, for: indexPath)
                 as? SearchResultsCollectionViewCell else { return UICollectionViewCell() }
-        if collectionView == collectionViewPopularRequests {
+        if collectionView == popularRequestsCV {
             cell.configure(withText: popular_brands[indexPath.row])
-        } else if collectionView == collectionViewSearchHistory {
+        } else if collectionView == searchHistoryCV {
             cell.configure(withText: searched_brands[indexPath.row])
         }
         return cell
@@ -443,4 +445,8 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 height: 40
             )
     }
+}
+
+enum Constanst {
+    static let defaultPrice: Double = 12
 }

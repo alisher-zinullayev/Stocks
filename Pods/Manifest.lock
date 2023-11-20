@@ -2,17 +2,21 @@ PODS:
   - DGCharts (5.0.0):
     - DGCharts/Core (= 5.0.0)
   - DGCharts/Core (5.0.0)
+  - SnapKit (5.6.0)
 
 DEPENDENCIES:
   - DGCharts
+  - SnapKit
 
 SPEC REPOS:
   trunk:
     - DGCharts
+    - SnapKit
 
 SPEC CHECKSUMS:
   DGCharts: 6e0cf2644e8f81ad13f04caa8bc18502870a1c54
+  SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: 6ec131a6f5c1211f689d26cc1187ec23c6defb3a
+PODFILE CHECKSUM: 1cf9f83a13ec1182cb716c661d4a57a94fd58469
 
 COCOAPODS: 1.14.2

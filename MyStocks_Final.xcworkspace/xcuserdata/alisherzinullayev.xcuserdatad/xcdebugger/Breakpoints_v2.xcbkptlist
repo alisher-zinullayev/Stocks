@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "CD9D2C60-323E-4A1B-AE0B-2CBBB5B4D49F"
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C263DD91-8C71-4D3A-9B14-BB0B60603075"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyStocks_Final/Controllers/Core/MainViewStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "14"
+            endingLineNumber = "14"
+            landmarkName = "MainViewStore"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "C263DD91-8C71-4D3A-9B14-BB0B60603075 - 958bacdd1e029df1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MyStocks_Final.MainViewStore.deinit"
+                  moduleName = "MyStocks_Final"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alisherzinullayev/Desktop/My_Stocks_Tracking_App_Final/MyStocks_Final/Controllers/Core/MainViewStore.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "14"
+                  endingLineNumber = "14"
+                  offsetFromSymbolStart = "0">
+               </Location>
+               <Location
+                  uuid = "C263DD91-8C71-4D3A-9B14-BB0B60603075 - f29c3aff05729b22"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MyStocks_Final.MainViewStore.__deallocating_deinit"
+                  moduleName = "MyStocks_Final"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alisherzinullayev/Desktop/My_Stocks_Tracking_App_Final/MyStocks_Final/Controllers/Core/MainViewStore.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "16">
+               </Location>
+               <Location
+                  uuid = "C263DD91-8C71-4D3A-9B14-BB0B60603075 - 3da4af7f195fb7cb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MyStocks_Final.MainViewStore.__allocating_init() -&gt; MyStocks_Final.MainViewStore"
+                  moduleName = "MyStocks_Final"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alisherzinullayev/Desktop/My_Stocks_Tracking_App_Final/MyStocks_Final/Controllers/Core/MainViewStore.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "32">
+               </Location>
+               <Location
+                  uuid = "C263DD91-8C71-4D3A-9B14-BB0B60603075 - ae2d7c1cdd406d2d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MyStocks_Final.MainViewStore.init() -&gt; MyStocks_Final.MainViewStore"
+                  moduleName = "MyStocks_Final"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alisherzinullayev/Desktop/My_Stocks_Tracking_App_Final/MyStocks_Final/Controllers/Core/MainViewStore.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "14"
+                  endingLineNumber = "14"
+                  offsetFromSymbolStart = "24">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

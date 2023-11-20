@@ -20,16 +20,6 @@ final class MainTableViewCell: UITableViewCell {
     
     var model: StockMetaData?
     
-// {
-//        didSet {
-//            if model?.isFavorite == true {
-//                starIcon.image = UIImage(named: "favorite")
-//            } else {
-//                starIcon.image = UIImage(named: "default")
-//            }
-//        }
-//    }
-    
     @objc func starIconTapped() {
         if starIcon.image == UIImage(named: "favorite") {
             model?.isFavorite = false
@@ -64,6 +54,7 @@ final class MainTableViewCell: UITableViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.image = UIImage(named: "yandex_icon")
+        imageView.layer.cornerRadius = 10
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -186,68 +177,51 @@ extension MainTableViewCell {
     
     private func setupUI() {
         
-        let containerViewConstraints = [
-            containerView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 68),
-        ]
+        containerView.snp.makeConstraints { maker in
+            maker.top.bottom.equalToSuperview()
+            maker.leading.equalToSuperview().offset(20)
+            maker.trailing.equalToSuperview().offset(-20)
+            maker.height.greaterThanOrEqualTo(68)
+        }
         
-        let backgroundUIViewConstraints = [
-            backgroundUIView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            backgroundUIView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            backgroundUIView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            backgroundUIView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-            backgroundUIView.heightAnchor.constraint(greaterThanOrEqualToConstant: 68),
-        ]
+        backgroundUIView.snp.makeConstraints { maker in
+            maker.top.leading.trailing.bottom.equalTo(containerView)
+            maker.height.greaterThanOrEqualTo(68)
+        }
         
-        let logoConstraints = [
-            logo.heightAnchor.constraint(equalToConstant: 52),
-            logo.widthAnchor.constraint(equalToConstant: 52),
-            logo.leadingAnchor.constraint(equalTo: backgroundUIView.leadingAnchor, constant: 8),
-            logo.topAnchor.constraint(equalTo: backgroundUIView.topAnchor, constant: 8),
-            logo.bottomAnchor.constraint(lessThanOrEqualTo: backgroundUIView.bottomAnchor, constant: -8) // lessThanOrEqualTo
-        ]
+        logo.snp.makeConstraints { maker in
+            maker.height.width.equalTo(52)
+            maker.leading.top.equalTo(backgroundUIView).offset(8)
+            maker.bottom.lessThanOrEqualTo(backgroundUIView.snp.bottom).offset(-8)
+        }
         
-        let nameConstraints = [
-            name.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: 12),
-            name.topAnchor.constraint(equalTo: backgroundUIView.topAnchor, constant: 14),
-            name.bottomAnchor.constraint(equalTo: backgroundUIView.bottomAnchor, constant: -30)
-        ]
+        name.snp.makeConstraints { maker in
+            maker.leading.equalTo(logo.snp.trailing).offset(12)
+            maker.top.equalTo(backgroundUIView.snp.top).offset(14)
+            maker.bottom.equalTo(backgroundUIView.snp.bottom).offset(-30)
+        }
         
-        let abbreviationConstraints = [
-            abbreviation.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: 12),
-            abbreviation.bottomAnchor.constraint(equalTo: backgroundUIView.bottomAnchor, constant: -14),
-            abbreviation.topAnchor.constraint(equalTo: backgroundUIView.topAnchor, constant: 38)
-        ]
+        abbreviation.snp.makeConstraints { maker in
+            maker.leading.equalTo(logo.snp.trailing).offset(12)
+            maker.bottom.equalTo(backgroundUIView.snp.bottom).offset(-14)
+            maker.top.equalTo(backgroundUIView.snp.top).offset(38)
+        }
         
-        let starIconConstraints = [
-            starIcon.leadingAnchor.constraint(equalTo: name.trailingAnchor, constant: 6),
-            starIcon.topAnchor.constraint(equalTo: name.topAnchor),
-            starIcon.bottomAnchor.constraint(equalTo: name.bottomAnchor),
-        ]
+        starIcon.snp.makeConstraints { maker in
+            maker.leading.equalTo(name.snp.trailing).offset(6)
+            maker.top.bottom.equalTo(name)
+        }
         
-        let current_priceConstraints = [
-            current_price.trailingAnchor.constraint(equalTo: backgroundUIView.trailingAnchor, constant: -17),
-            current_price.topAnchor.constraint(equalTo: backgroundUIView.topAnchor, constant: 14),
-            current_price.bottomAnchor.constraint(equalTo: backgroundUIView.bottomAnchor, constant: -30),
-        ]
-        
-        let percent_priceConstraints = [
-            percent_price.trailingAnchor.constraint(equalTo: backgroundUIView.trailingAnchor, constant: -12),
-            percent_price.topAnchor.constraint(equalTo: backgroundUIView.topAnchor, constant: 38),
-            percent_price.bottomAnchor.constraint(equalTo: backgroundUIView.bottomAnchor, constant: -12),
-        ]
-        
-        NSLayoutConstraint.activate(containerViewConstraints)
-        NSLayoutConstraint.activate(backgroundUIViewConstraints)
-        NSLayoutConstraint.activate(logoConstraints)
-        NSLayoutConstraint.activate(nameConstraints)
-        NSLayoutConstraint.activate(abbreviationConstraints)
-        NSLayoutConstraint.activate(starIconConstraints)
-        NSLayoutConstraint.activate(current_priceConstraints)
-        NSLayoutConstraint.activate(percent_priceConstraints)
+        current_price.snp.makeConstraints { maker in
+            maker.trailing.equalTo(backgroundUIView.snp.trailing).offset(-17)
+            maker.top.equalTo(backgroundUIView.snp.top).offset(14)
+            maker.bottom.equalTo(backgroundUIView.snp.bottom).offset(-30)
+        }
+
+        percent_price.snp.makeConstraints { maker in
+            maker.bottom.trailing.equalTo(backgroundUIView).offset(-12)
+            maker.top.equalTo(backgroundUIView.snp.top).offset(38)
+        }
     }
     
     

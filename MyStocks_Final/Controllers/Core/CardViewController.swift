@@ -7,6 +7,7 @@
 
 import UIKit
 import DGCharts
+import SnapKit
 
 final class CardViewController: UIViewController {
     
@@ -21,10 +22,6 @@ final class CardViewController: UIViewController {
     
     var values: [StockChartValues] = []
     var valuesForChart: [ChartDataEntry] = [
-//        ChartDataEntry(x: 0.0, y: 0.0),
-        ChartDataEntry(x: 1.0, y: 182.0),
-//        ChartDataEntry(x: 2.0, y: 7.0),
-//        ChartDataEntry(x: 3.0, y: 0.0)
     ]
     
     init(nameString: String, abbreviationString: String, isFavouriteBool: Bool, current_priceString: Double, price_changeString: Double, percent_changeString: Double) {
@@ -48,73 +45,50 @@ final class CardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        
         setupUI()
         setupCollectionView()
+        
         let customBackButton = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItems = [customBackButton]
-        
+
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(backButtonTapped))
         backButton.isUserInteractionEnabled = true
         backButton.addGestureRecognizer(tapGesture)
+        let starIconTapGesture = UITapGestureRecognizer(target: self, action: #selector(starIconTapped))
+        starIcon.isUserInteractionEnabled = true
+        starIcon.addGestureRecognizer(starIconTapGesture)
+        
         lineChartView.delegate = self
+        
+        
         Task { [weak self] in
             do {
-                let values = try await DefaultChartsMetaDataSource().fetchStocksChartData(ticker: "AAPL", start: "1697361279", end: "1699953001")
+                let currentDateInt = Int(Date().timeIntervalSince1970)
+                let values = try await DefaultChartsMetaDataSource().fetchStocksChartData(ticker: abbreviationString, start: "0", end: String(currentDateInt), type: "W")
                 self?.values = values
-                print(values)
                 DispatchQueue.main.async { [weak self] in
-                    for (index, stockValue) in values.enumerated() {
-                        print("Index: \(index), StockChartValues: \(stockValue)")
-                        for (cIndex, cValue) in stockValue.c.enumerated() {
-                            print("cIndex: \(cIndex), cValue: \(cValue)")
-                        }
-                        let chartEntry = ChartDataEntry(x: Double(index)+0.0, y: stockValue.c[0]) // Assuming c is an array and you want the first element
-                        self?.valuesForChart.append(chartEntry)
-                    }
+                    self?.addData()
                     self?.setData()
                 }
-                
             } catch {
                 print("Error fetching stock chart data: \(error)")
             }
         }
+        
         setData()
     }
     
-    // DateController
     
-    let currentDate = Date()
-    
-    func oneDayBeforeUnixTimestamp() -> TimeInterval {
-        let currentDate = Date()
-        let oneDayInSeconds: TimeInterval = 24 * 60 * 60
-        let oneDayBeforeTimestamp = currentDate.timeIntervalSince1970 - oneDayInSeconds
-
-        return oneDayBeforeTimestamp
-    }
-    
-    func oneWeekBeforeUnixTimestamp() -> TimeInterval {
-        let currentDate = Date()
-        let oneDayInSeconds: TimeInterval = 24 * 60 * 60 * 7
-        let oneDayBeforeTimestamp = currentDate.timeIntervalSince1970 - oneDayInSeconds
-
-        return oneDayBeforeTimestamp
-    }
-    
-    func oneMonthBeforeUnixTimestamp() -> TimeInterval {
-        let currentDate = Date()
-        let oneDayInSeconds: TimeInterval = 24 * 60 * 60 * 30
-        let oneDayBeforeTimestamp = currentDate.timeIntervalSince1970 - oneDayInSeconds
-
-        return oneDayBeforeTimestamp
-    }
-    
-    func oneYearBeforeUnixTimestamp() -> TimeInterval {
-        let currentDate = Date()
-        let oneDayInSeconds: TimeInterval = 24 * 60 * 60 * 30
-        let oneDayBeforeTimestamp = currentDate.timeIntervalSince1970 - oneDayInSeconds
-
-        return oneDayBeforeTimestamp
+    func addData() {
+        valuesForChart.removeAll()
+        
+        for stockValue in values {
+            for cValue in stockValue.c {
+                let chartEntry = ChartDataEntry(x: Double(valuesForChart.count), y: cValue)
+                valuesForChart.append(chartEntry)
+            }
+        }
     }
     
     private let backButton: UIImageView = {
@@ -136,14 +110,18 @@ final class CardViewController: UIViewController {
         navigationItem.leftItemsSupplementBackButton = true
     }
     
-    private let starIcon: UIImageView = {
+    lazy var starIcon: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "chart_fav")
+        imageView.image = UIImage(named: "default")
         imageView.tintColor = UIColor(cgColor: CGColor(red: 1, green: 0.79, blue: 0.11, alpha: 1))
         return imageView
     }()
+    
+    @objc func starIconTapped() {
+        print("star icon was tapped")
+    }
     
     private let name: UILabel = {
         let label = UILabel()
@@ -258,6 +236,36 @@ final class CardViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
+    
+    func calculateTimestampOffset(days: Int) -> TimeInterval {
+        let currentDate = Date()
+        let oneDayInSeconds: TimeInterval = 24 * 60 * 60
+        let offsetTimestamp = currentDate.timeIntervalSince1970 - Double(days) * oneDayInSeconds
+        return offsetTimestamp
+    }
+
+    func getTimestampOffset(forDate date: String) -> (Int, String) {
+        var resultInt: Int = 0
+        var typeStr = "D"
+
+        switch date {
+        case "W":
+            resultInt = Int(calculateTimestampOffset(days: 7))
+        case "M":
+            resultInt = Int(calculateTimestampOffset(days: 30))
+        case "6M":
+            resultInt = Int(calculateTimestampOffset(days: 30 * 6))
+        case "1Y":
+            resultInt = Int(calculateTimestampOffset(days: 365))
+        case "All":
+            resultInt = Int(calculateTimestampOffset(days: 365))
+            typeStr = "W"
+        default:
+            break
+        }
+
+        return (resultInt, typeStr)
+    }
 }
 
 extension CardViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -269,6 +277,25 @@ extension CardViewController: UICollectionViewDelegate, UICollectionViewDataSour
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: YearCollectionViewCell.identifier, for: indexPath) as? YearCollectionViewCell else { return UICollectionViewCell() }
         cell.configure(label: dates[indexPath.row])
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let (resultInt, typeStr) = getTimestampOffset(forDate: dates[indexPath.row])
+
+        Task { [weak self] in
+            do {
+                let currentDate = Date()
+                let currentDateInt = Int(currentDate.timeIntervalSince1970)
+                let values = try await DefaultChartsMetaDataSource().fetchStocksChartData(ticker: abbreviationString, start: String(resultInt), end: String(currentDateInt), type: typeStr)
+                self?.values = values
+                DispatchQueue.main.async { [weak self] in
+                    self?.addData()
+                    self?.setData()
+                }
+            } catch {
+                print("Error fetching stock chart data: \(error)")
+            }
+        }
     }
 }
 
@@ -296,7 +323,7 @@ extension CardViewController: ChartViewDelegate {
         
         
         let data = LineChartData(dataSet: set1)
-//        data.setDrawValues(false)
+        data.setDrawValues(false)
         lineChartView.data = data
     }
 }
@@ -319,82 +346,78 @@ extension CardViewController {
         view.addSubview(current_price)
         view.addSubview(price_change)
         
-        let backConstraints = [
-            backButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 62), // 10
-            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            backButton.heightAnchor.constraint(equalToConstant: 24),
-            backButton.widthAnchor.constraint(equalToConstant: 24),
-        ]
-        let abbreviationConstraints = [
-            abbreviation.topAnchor.constraint(equalTo: view.topAnchor, constant: 52), // 10
-            abbreviation.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ]
-        let nameConstraints = [
-            name.topAnchor.constraint(equalTo: abbreviation.bottomAnchor, constant: 4),
-            name.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ]
-        let starIconConstraints = [
-            starIcon.topAnchor.constraint(equalTo: view.topAnchor, constant: 62), //10
-            starIcon.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            starIcon.heightAnchor.constraint(equalToConstant: 24),
-            starIcon.widthAnchor.constraint(equalToConstant: 24),
-        ]
-        let chartButtonConstraints = [
-            chartButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            chartButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 118), // 10
-            chartButton.widthAnchor.constraint(equalToConstant: 53),
-            chartButton.heightAnchor.constraint(equalToConstant: 24)
-        ]
-        let summaryButtonConstraints = [
-            summaryButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 120), // 10
-            summaryButton.widthAnchor.constraint(equalToConstant: 71),
-            summaryButton.heightAnchor.constraint(equalToConstant: 20),
-            summaryButton.leadingAnchor.constraint(equalTo: chartButton.trailingAnchor, constant: 20)
-        ]
-        let newsButtonConstraints = [
-            newsButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
-            newsButton.widthAnchor.constraint(equalToConstant: 40),
-            newsButton.heightAnchor.constraint(equalToConstant: 20),
-            newsButton.leadingAnchor.constraint(equalTo: summaryButton.trailingAnchor, constant: 20)
-        ]
-        let forecastsButtonConstraints = [
-            forecastsButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
-            forecastsButton.widthAnchor.constraint(equalToConstant: 70),
-            forecastsButton.heightAnchor.constraint(equalToConstant: 20),
-            forecastsButton.leadingAnchor.constraint(equalTo: newsButton.trailingAnchor, constant: 20)
-        ]
-        let ideasButtonConstraints = [
-            ideasButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
-            ideasButton.widthAnchor.constraint(equalToConstant: 39),
-            ideasButton.heightAnchor.constraint(equalToConstant: 20),
-            ideasButton.leadingAnchor.constraint(equalTo: forecastsButton.trailingAnchor, constant: 20)
-        ]
-        let current_priceConstraints = [
-            current_price.topAnchor.constraint(equalTo: chartButton.bottomAnchor, constant: 62),
-            current_price.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ]
-        let price_changeConstraints = [
-            price_change.topAnchor.constraint(equalTo: current_price.bottomAnchor, constant: 8),
-            price_change.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ]
-        let stockGraphViewConstraints = [
-            lineChartView.topAnchor.constraint(equalTo: price_change.bottomAnchor, constant: 10),
-            lineChartView.heightAnchor.constraint(equalToConstant: 280), // 464
-            lineChartView.widthAnchor.constraint(equalTo: view.widthAnchor)
-        ]
+        backButton.snp.makeConstraints { maker in
+            maker.top.equalToSuperview().inset(62)
+            maker.leading.equalToSuperview().offset(16)
+            maker.height.width.equalTo(24)
+        }
         
-        NSLayoutConstraint.activate(backConstraints)
-        NSLayoutConstraint.activate(abbreviationConstraints)
-        NSLayoutConstraint.activate(nameConstraints)
-        NSLayoutConstraint.activate(starIconConstraints)
-        NSLayoutConstraint.activate(chartButtonConstraints)
-        NSLayoutConstraint.activate(summaryButtonConstraints)
-        NSLayoutConstraint.activate(newsButtonConstraints)
-        NSLayoutConstraint.activate(forecastsButtonConstraints)
-        NSLayoutConstraint.activate(ideasButtonConstraints)
-        NSLayoutConstraint.activate(current_priceConstraints)
-        NSLayoutConstraint.activate(price_changeConstraints)
-        NSLayoutConstraint.activate(stockGraphViewConstraints)
+        abbreviation.snp.makeConstraints { maker in
+            maker.top.equalToSuperview().offset(52)
+            maker.centerX.equalToSuperview()
+        }
+        
+        name.snp.makeConstraints { maker in
+            maker.top.equalTo(abbreviation.snp.bottom).offset(4)
+            maker.centerX.equalToSuperview()
+        }
+        
+        starIcon.snp.makeConstraints { maker in
+            maker.top.equalToSuperview().offset(62)
+            maker.trailing.equalToSuperview().offset(-16)
+            maker.height.width.equalTo(24)
+        }
+        
+        chartButton.snp.makeConstraints { maker in
+            maker.leading.equalToSuperview().offset(20)
+            maker.top.equalToSuperview().offset(118)
+            maker.width.equalTo(53)
+            maker.height.equalTo(24)
+        }
+        
+        summaryButton.snp.makeConstraints { maker in
+            maker.top.equalToSuperview().offset(120)
+            maker.height.equalTo(20)
+            maker.width.equalTo(71)
+            maker.leading.equalTo(chartButton.snp.trailing).offset(20)
+        }
+        
+        newsButton.snp.makeConstraints { maker in
+            maker.top.equalToSuperview().offset(120)
+            maker.height.equalTo(20)
+            maker.width.equalTo(40)
+            maker.leading.equalTo(summaryButton.snp.trailing).offset(20)
+        }
+        
+        forecastsButton.snp.makeConstraints { maker in
+            maker.top.equalToSuperview().offset(120)
+            maker.height.equalTo(20)
+            maker.width.equalTo(70)
+            maker.leading.equalTo(newsButton.snp.trailing).offset(20)
+        }
+        
+        ideasButton.snp.makeConstraints { maker in
+            maker.top.equalToSuperview().offset(120)
+            maker.height.equalTo(20)
+            maker.width.equalTo(39)
+            maker.leading.equalTo(forecastsButton.snp.trailing).offset(20)
+        }
+        
+        current_price.snp.makeConstraints { maker in
+            maker.top.equalTo(chartButton.snp.bottom).offset(62)
+            maker.centerX.equalToSuperview()
+        }
+        
+        price_change.snp.makeConstraints { maker in
+            maker.top.equalTo(current_price.snp.bottom).offset(8)
+            maker.centerX.equalToSuperview()
+        }
+        
+        lineChartView.snp.makeConstraints { maker in
+            maker.top.equalTo(price_change.snp.bottom).offset(10)
+            maker.height.equalTo(280)
+            maker.width.equalToSuperview()
+        }
     }
     
     private func setupCollectionView() {
