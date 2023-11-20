@@ -1,4 +1,4 @@
-![Simulator Screen Shot - iPhone 14 Pro - 2023-11-20 at 17 57 42](https://github.com/alisher-zinullayev/Stocks/assets/121559112/0aa8a338-342e-487c-a9ef-12cc7a6d9b69)# StockTracker App
+# StockTracker App
 
 ## Overview
 The StockTracker app is a user-friendly tool that provides real-time stock prices and historical data for popular stocks. Users can easily access current stock prices and view interactive charts that illustrate how the values have fluctuated over time. The app utilizes the Finhub API to obtain accurate and up-to-date financial data.
@@ -9,6 +9,8 @@ Real-Time Stock Prices: Get the latest stock prices for a wide range of popular 
 Historical Data: View historical data and analyze stock performance over different time periods.
 
 Interactive Charts: User-friendly charts provide a visual representation of stock price fluctuations.
+
+![Simulator Screen Shot - iPhone 14 Pro - 2023-11-20 at 17 57 42](https://github.com/alisher-zinullayev/Stocks/assets/121559112/0aa8a338-342e-487c-a9ef-12cc7a6d9b69.png | width=200)
 
 ![Simulator Screen Shot - iPhone 14 Pro - 2023-11-20 at 17 57 42](https://github.com/alisher-zinullayev/Stocks/assets/121559112/49036495-14b3-4c50-8b69-774f334d6cef)
 
